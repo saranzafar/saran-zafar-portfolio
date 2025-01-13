@@ -32,7 +32,7 @@ export const DATA = {
   ],
   navbar: [
     { href: "/", icon: HomeIcon, label: "Home" },
-    { href: "/blog", icon: NotebookIcon, label: "Blog" },
+    { href: "/blog/read", icon: NotebookIcon, label: "Blog" },
   ],
   contact: {
     email: "saran.development@gmail.com",
@@ -61,7 +61,6 @@ export const DATA = {
       },
     },
   },
-
   work: [
     {
       company: "LogicExer",

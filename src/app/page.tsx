@@ -138,7 +138,7 @@ export default function Page() {
                   <ProjectsCard
                     title={project.title}
                     description={project.description}
-                    technologies={project.technologies}
+                    technologies={[...project.technologies]}
                     dates={project.dates}
                     image={project.image}
                     links={project.links}

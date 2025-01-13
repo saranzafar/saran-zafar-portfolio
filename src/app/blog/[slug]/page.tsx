@@ -5,27 +5,38 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-export async function generateStaticParams() {
+// Type for BlogPageProps
+type Params = Promise<{ slug: string }>; // Updated to handle the promise type
+
+interface BlogPageProps {
+  params: Params; // Awaitable params type
+}
+
+// generateStaticParams function
+export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
   const posts = await getBlogPosts();
   return posts.map((post) => ({ slug: post.slug }));
 }
 
+// generateMetadata function
 export async function generateMetadata({
   params,
-}: {
-  params: {
-    slug: string;
-  };
-}): Promise<Metadata | undefined> {
-  let post = await getPost(params.slug);
+}: BlogPageProps): Promise<Metadata | undefined> {
+  const { slug } = await params; // Await the resolved params
+  const post = await getPost(slug);
 
-  let {
+  if (!post) return undefined;
+
+  const {
     title,
     publishedAt: publishedTime,
     summary: description,
     image,
   } = post.metadata;
-  let ogImage = image ? `${DATA.url}${image}` : `${DATA.url}/og?title=${title}`;
+
+  const ogImage = image
+    ? `${DATA.url}${image}`
+    : `${DATA.url}/og?title=${title}`;
 
   return {
     title,
@@ -51,14 +62,10 @@ export async function generateMetadata({
   };
 }
 
-export default async function Blog({
-  params,
-}: {
-  params: {
-    slug: string;
-  };
-}) {
-  let post = await getPost(params.slug);
+// Blog component
+export default async function Blog({ params }: BlogPageProps) {
+  const { slug } = await params; // Await the resolved params
+  const post = await getPost(slug);
 
   if (!post) {
     notFound();
