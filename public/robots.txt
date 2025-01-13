@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://saranzafar.vercel.app
+
+# Sitemaps
+Sitemap: https://saranzafar.vercel.app/sitemap.xml
