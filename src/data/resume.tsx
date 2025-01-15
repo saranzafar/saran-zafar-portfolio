@@ -52,13 +52,12 @@ export const DATA = {
 
         navbar: true,
       },
-      email: {
-        name: "Send Email",
-        url: "saran.development@gmail.com",
-        icon: Icons.email,
-
-        navbar: false,
-      },
+      Fiverr: {
+        name: "Fiverr",
+        url: "https://www.fiverr.com/webofsaran",
+        icon: Icons.fiverr,
+        navbar: true,
+      }
     },
   },
   work: [
