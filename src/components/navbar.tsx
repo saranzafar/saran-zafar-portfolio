@@ -26,6 +26,8 @@ export default function Navbar() {
                     buttonVariants({ variant: "ghost", size: "icon" }),
                     "size-12"
                   )}
+                  aria-label={item.label}
+                  title={item.label}
                 >
                   <item.icon className="size-4" />
                 </Link>
@@ -49,6 +51,8 @@ export default function Navbar() {
                       buttonVariants({ variant: "ghost", size: "icon" }),
                       "size-12"
                     )}
+                    aria-label={`Visit ${social?.name}`}
+                    title={`Visit ${social?.name}`}
                   >
                     <social.icon className="size-4" />
                   </Link>

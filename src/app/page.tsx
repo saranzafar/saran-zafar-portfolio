@@ -6,6 +6,7 @@ import { ResumeCard } from "@/components/resume-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { DATA } from "@/data/resume";
+import Image from "next/image";
 import Link from "next/link";
 import Markdown from "react-markdown";
 
@@ -32,7 +33,17 @@ export default function Page() {
             </div>
             <BlurFade delay={BLUR_FADE_DELAY}>
               <Avatar className="size-28 border">
-                <AvatarImage alt={DATA.name} src={DATA.avatarUrl} />
+                {/* <AvatarImage alt={DATA.name} src={DATA.avatarUrl} /> */}
+                <Image
+                  src={DATA.avatarUrl}
+                  alt={DATA.name}
+                  width={500}
+                  height={500}
+                  className="rounded-full"
+                  priority // Ensures the image loads faster for above-the-fold content
+                  placeholder="blur" // Adds a blur effect while the image loads
+                  blurDataURL="/placeholder-image.png" // Replace with a tiny placeholder image
+                />
                 <AvatarFallback>{DATA.initials}</AvatarFallback>
               </Avatar>
             </BlurFade>
@@ -164,6 +175,7 @@ export default function Page() {
                 <Link
                   href={`mailto:${DATA.contact.email}`}
                   className="text-blue-500 hover:underline"
+                  aria-label="Send an email to Saran Zafar"
                 >
                   email
                 </Link>{" "}
@@ -172,6 +184,7 @@ export default function Page() {
                   href={DATA.contact.social.LinkedIn.url} // Ensure DATA.contact.social.LinkedIn contains a valid LinkedIn URL
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Visit Saran Zafar's LinkedIn profile"
                   className="text-blue-500 hover:underline"
                 >
                   LinkedIn

@@ -40,19 +40,20 @@ export const ResumeCard = ({
 
   return (
     <Link
-      href={href || "#"}
+      href={href || "#"} // Fallback href
       className="block cursor-pointer"
-      onClick={handleClick}
+      onClick={handleClick} // Ensure handleClick is properly defined
+      aria-label={`Open ${title}`} // Accessibility for screen readers
     >
       <Card className="flex">
         <div className="flex-none">
           <Avatar className="border size-12 m-auto bg-muted-background dark:bg-foreground">
             <AvatarImage
               src={logoUrl}
-              alt={altText}
+              alt={altText || title} // Fallback to title if altText is missing
               className="object-contain"
             />
-            <AvatarFallback>{altText[0]}</AvatarFallback>
+            <AvatarFallback>{altText?.[0] || title?.[0]}</AvatarFallback>
           </Avatar>
         </div>
         <div className="flex-grow ml-4 items-center flex-col group">
@@ -91,7 +92,6 @@ export const ResumeCard = ({
               initial={{ opacity: 0, height: 0 }}
               animate={{
                 opacity: isExpanded ? 1 : 0,
-
                 height: isExpanded ? "auto" : 0,
               }}
               transition={{
