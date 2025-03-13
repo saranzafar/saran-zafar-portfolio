@@ -5,23 +5,22 @@ import Link from "next/link";
 interface Props {
   title: string;
   description: string;
-  dates: string;
   technologies: string[];
-  image?: string;
   links?: readonly {
     icon: React.ReactNode;
     title: string;
     href: string;
   }[];
+  image?: string;
+  dates?: string; // Made optional as it's not in API
 }
 
 export function ProjectsCard({
   title,
   description,
-  dates,
-  technologies, // Now technologies
-  image,
+  technologies,
   links,
+  image,
 }: Props) {
   return (
     <li className="relative ml-10 py-4">
@@ -32,17 +31,11 @@ export function ProjectsCard({
         </Avatar>
       </div>
       <div className="flex flex-1 flex-col justify-start gap-1">
-        {dates && (
-          <time className="text-xs text-muted-foreground">{dates}</time>
-        )}
         <h2 className="font-semibold leading-none">{title}</h2>
         {technologies && technologies.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-1">
             {technologies.map((tech, index) => (
-              <Badge
-                key={index}
-                variant={"secondary"}
-              >
+              <Badge key={index} variant={"secondary"}>
                 {tech}
               </Badge>
             ))}
@@ -59,16 +52,15 @@ export function ProjectsCard({
           {links?.map((link, idx) => (
             <Link
               href={link.href}
-              key={idx} // Correct placement of the key on the outermost element
-              aria-label={`Visit ${link.title}`} // Accessibility for screen readers
-              title={`Visit ${link.title}`} // Tooltip for visual users
+              key={idx}
+              aria-label={`Visit ${link.title}`}
+              title={`Visit ${link.title}`}
             >
               <Badge className="flex gap-2" title={link.title}>
                 {link.icon}
                 {link.title}
               </Badge>
             </Link>
-
           ))}
         </div>
       )}

@@ -1,18 +1,37 @@
-import { HackathonCard } from "@/components/hackathon-card";
+'use client'
+
 import BlurFade from "@/components/magicui/blur-fade";
 import BlurFadeText from "@/components/magicui/blur-fade-text";
 import { ProjectsCard } from "@/components/projects-card";
 import { ResumeCard } from "@/components/resume-card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { DATA } from "@/data/resume";
+import { Github } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import Markdown from "react-markdown";
 
 const BLUR_FADE_DELAY = 0.04;
 
 export default function Page() {
+  const [projects, setProjects] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch('https://pinned.berrysauce.dev/get/saranzafar');
+        const data = await response.json();
+        setProjects(data);
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
   return (
     <main className="flex flex-col min-h-[100dvh] space-y-10">
       <section id="hero">
@@ -140,19 +159,25 @@ export default function Page() {
             </div>
           </BlurFade>
           <BlurFade delay={BLUR_FADE_DELAY * 14}>
-            <ul className="mb-4 ml-4 divide-y divide-dashed border-l">
-              {DATA.projects.map((project, id) => (
+            <ul className="ml-4 divide-y divide-dashed border-l">
+              {projects.map((project, id) => (
                 <BlurFade
-                  key={project.title + project.dates}
+                  key={project.name}
                   delay={BLUR_FADE_DELAY * 15 + id * 0.05}
                 >
                   <ProjectsCard
-                    title={project.title}
+                    title={project.name.replace(/-/g, ' ')}
                     description={project.description}
-                    technologies={[...project.technologies]}
-                    dates={project.dates}
-                    image={project.image}
-                    links={project.links}
+                    technologies={[
+                      project.language,
+                      `⭐ ${project.stars}`,
+                      `🍴 ${project.forks}`
+                    ]}
+                    links={[{
+                      icon: <Github className="h-4 w-4" />,
+                      title: "GitHub",
+                      href: `https://github.com/${project.author}/${project.name}`
+                    }]}
                   />
                 </BlurFade>
               ))}
@@ -161,7 +186,7 @@ export default function Page() {
         </div>
       </section>
       <section id="contact">
-        <div className="grid items-center justify-center gap-4 px-4 text-center md:px-6 w-full py-12">
+        <div className="grid items-center justify-center gap-4 px-4 text-center md:px-6 w-full py-4">
           <BlurFade delay={BLUR_FADE_DELAY * 16}>
             <div className="space-y-3">
               <div className="inline-block rounded-lg bg-foreground text-background px-3 py-1 text-sm">
