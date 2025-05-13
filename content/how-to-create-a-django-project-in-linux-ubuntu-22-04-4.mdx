@@ -1,0 +1,160 @@
+---
+title: "How to Create a Django Project in Linux/Ubuntu 22.04.4"
+slug: "how-to-create-a-django-project-in-linux-ubuntu-22-04-4"
+publishedAt: "2025-05-13"
+summary: "Learn how to set up and run your first Django project on Ubuntu 22.04.4 LTS. This step-by-step guide covers prerequisites, installation, virtual environments, and best practices for a rock-solid Python web development workflow."
+image: "/blogs/how-to-create-a-django-project-in-linux-ubuntu-22-04-4.png"
+tags:
+  - Django
+  - Ubuntu 22.04
+  - Linux
+  - Python
+  - Web Development
+keywords: "create Django project Ubuntu 22.04, Django Ubuntu tutorial, Django Linux guide, Python web development"
+---
+
+# How to Create a Django Project in Linux/Ubuntu 22.04.4
+
+> **Table of Contents**  
+> 1. [Why Django on Ubuntu 22.04?](#why-django-on-ubuntu-22044)  
+> 2. [Prerequisites](#prerequisites)  
+> 3. [Step 1: Update Your System](#step-1-update-your-system)  
+> 4. [Step 2: Install Python & pip](#step-2-install-python--pip)  
+> 5. [Step 3: Create a Virtual Environment](#step-3-create-a-virtual-environment)  
+> 6. [Step 4: Install Django](#step-4-install-django)  
+> 7. [Step 5: Start Your Django Project](#step-5-start-your-django-project)  
+> 8. [Step 6: Run the Development Server](#step-6-run-the-development-server)  
+> 9. [What’s Next?](#whats-next)  
+> 10. [FAQ](#faq)  
+> 11. [Conclusion](#conclusion)
+
+---
+
+## Why Django on Ubuntu 22.04?  
+
+Ubuntu 22.04 LTS is a rock-solid, long-term support release. Pairing it with Django—one of the most popular Python web frameworks—gives you stability, security, and productivity. Perfect for everything from prototypes to production apps.
+
+## Prerequisites  
+
+Before you begin, make sure you have:
+
+- A running Ubuntu 22.04.4 LTS server or desktop  
+- **sudo** privileges  
+- A basic understanding of the Linux command line  
+
+---
+
+## Step 1: Update Your System
+
+```bash
+sudo apt update && sudo apt upgrade -y
+```
+
+Keeping your OS packages up-to-date ensures you get the latest security patches and library versions.
+
+## Step 2: Install Python & pip
+
+Ubuntu 22.04 ships with Python 3.10, but let’s install pip and venv:
+
+```bash
+sudo apt install python3-pip python3-venv -y
+```
+
+- **python3-pip:** the Python package manager
+
+- **python3-venv:** built-in virtual environment support
+
+## Step 3: Create a Virtual Environment
+
+Isolating your project dependencies avoids version conflicts:
+
+```bash
+cd ~
+python3 -m venv my_django_env
+source my_django_env/bin/activate
+```
+
+- Your prompt will now show ***(my_django_env)***
+
+- To deactivate later: deactivate
+
+
+## Step 4: Install Django
+
+With your venv active, install the latest Django release:
+
+```bash
+pip install django
+```
+
+Verify the installation:
+
+```bash
+django-admin --version
+```
+
+## Step 5: Start Your Django Project
+
+Generate a new project scaffold:
+
+```bash
+django-admin startproject mysite
+cd mysite
+```
+
+You’ll see:
+
+```bash
+mysite/
+├── manage.py
+└── mysite/
+    ├── __init__.py
+    ├── asgi.py
+    ├── settings.py
+    ├── urls.py
+    └── wsgi.py
+```
+
+- **manage.py:** CLI for running tasks
+
+- **settings.py:** central configuration
+
+## Step 6: Run the Development Server
+
+Launch Django’s built-in server:
+
+```bash
+python manage.py runserver 0.0.0.0:8000
+```
+
+---
+
+## What’s Next?
+
+- **Create an app:** `python manage.py startapp blog`  
+- **Configure your database** (e.g. PostgreSQL) in `settings.py`  
+- **Add templates & static files**  
+- **Deploy to production** with Gunicorn + Nginx  
+
+
+---
+
+## FAQ
+
+**Q1: Can I use Python 3.11 instead?**
+
+Yes, you can install via deadsnakes PPA, but ensure compatibility with Django’s supported versions.
+
+**Q2: How do I upgrade Django later?**
+
+```bash
+pip install --upgrade django
+```
+
+**Q3: Where are my static files?**
+
+Collect them via ***python manage.py collectstatic*** and serve with Nginx in production.
+
+## Conclusion
+
+You now have a fully functioning Django project running on Ubuntu 22.04.4. From here, you can build apps, integrate databases, and deploy to production. Happy coding! 

@@ -1,68 +1,78 @@
 import fs from "fs";
-import matter from "gray-matter";
 import path from "path";
-import rehypePrettyCode from "rehype-pretty-code";
-import rehypeStringify from "rehype-stringify";
+import matter from "gray-matter";
+import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
-import { unified } from "unified";
+import rehypePrettyCode from "rehype-pretty-code";
+import rehypeStringify from "rehype-stringify";
+import remarkSlug from "remark-slug";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
 
-type Metadata = {
+export interface Metadata {
   title: string;
   publishedAt: string;
   summary: string;
   image?: string;
-};
+}
 
-function getMDXFiles(dir: string) {
-  return fs.readdirSync(dir).filter((file) => path.extname(file) === ".mdx");
+export interface Post {
+  slug: string;
+  metadata: Metadata;
+  source: string;
+}
+
+const CONTENT_DIR = path.join(process.cwd(), "content");
+
+function getMDXFiles(): string[] {
+  return fs
+    .readdirSync(CONTENT_DIR)
+    .filter((file) => file.endsWith(".mdx"));
 }
 
 export async function markdownToHTML(markdown: string) {
-  const p = await unified()
+  const file = await unified()
     .use(remarkParse)
+    .use(remarkSlug as any)
     .use(remarkRehype)
-    .use(rehypePrettyCode, {
-      // https://rehype-pretty.pages.dev/#usage
-      theme: {
-        light: "min-light",
-        dark: "min-dark",
-      },
-      keepBackground: false,
-    })
+    .use(rehypePrettyCode, { /* … */ })
+    .use(rehypeSlug as any)
+    .use(
+      rehypeAutolinkHeadings as any,
+      { behavior: "append", content: { type: "text", value: " " } }
+    )
     .use(rehypeStringify)
     .process(markdown);
 
-  return p.toString();
+  return file.toString();
 }
 
-export async function getPost(slug: string) {
-  const filePath = path.join("content", `${slug}.mdx`);
-  let source = fs.readFileSync(filePath, "utf-8");
-  const { content: rawContent, data: metadata } = matter(source);
-  const content = await markdownToHTML(rawContent);
-  return {
-    source: content,
-    metadata,
-    slug,
-  };
+export async function getPost(slug: string): Promise<Post> {
+  const fullPath = path.join(CONTENT_DIR, `${slug}.mdx`);
+  const raw = fs.readFileSync(fullPath, "utf-8");
+  const { data, content: rawContent } = matter(raw);
+
+  const html = await markdownToHTML(rawContent);
+  const metadata = data as Metadata;
+
+  return { slug, metadata, source: html };
 }
 
-async function getAllPosts(dir: string) {
-  let mdxFiles = getMDXFiles(dir);
-  return Promise.all(
-    mdxFiles.map(async (file) => {
-      let slug = path.basename(file, path.extname(file));
-      let { metadata, source } = await getPost(slug);
-      return {
-        metadata,
-        slug,
-        source,
-      };
+export async function getBlogPosts(): Promise<Post[]> {
+  const files = getMDXFiles();
+
+  const posts = await Promise.all(
+    files.map(async (filename) => {
+      const slug = filename.replace(/\.mdx$/, "");
+      return getPost(slug);
     })
   );
-}
 
-export async function getBlogPosts() {
-  return getAllPosts(path.join(process.cwd(), "content"));
+  // Sort newest first
+  return posts.sort(
+    (a, b) =>
+      new Date(b.metadata.publishedAt).getTime() -
+      new Date(a.metadata.publishedAt).getTime()
+  );
 }
